@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+{#{% load shop_tags %}#}
+
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="breadcrumb-header">Оформление заказа</h3>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                {% if request.user.cart_products.all %}
+                    <form method="POST" action="{% url 'create_order' %}">
+                        {% csrf_token %}
+
+                        <div class="col-md-7">
+                            <!-- Billing Details -->
+                            <div class="billing-details">
+
+                                <div class="section-title">
+                                    <h3 class="title">Данные покупателя</h3>
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="email" name="email" placeholder="Email"
+                                           value="{{ request.user.username }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="phone_number" placeholder="Номер телефона"
+                                           value="{{ request.user.phone_number }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="first_name" placeholder="Имя"
+                                           value="{{ request.user.first_name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="last_name" placeholder="Фамилия"
+                                           value="{{ request.user.last_name }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="city" placeholder="Город">
+                                </div>
+                                <div class="form-group">
+                                    <input class="input" type="text" name="address" placeholder="Адрес">
+                                </div>
+                                <p>*Поля Город и Адрес необязательны для заполнения, если способ получения товара -
+                                    самовывоз</p>
+                            </div>
+                        </div>
+
+                        <!-- Order Details -->
+                        <div class="col-md-5 order-details">
+                            <div class="section-title text-center">
+                                <h3 class="title">Ваш заказ</h3>
+                            </div>
+                            <div class="order-summary">
+                                <div class="order-col">
+                                    <div><strong>Товар</strong></div>
+                                    <div><strong>Цена</strong></div>
+                                </div>
+                                <div class="order-products">
+                                    {% for item in request.user.cart_products.all %}
+                                        <div class="order-col">
+                                            <div>{{ item.quantity }}x {{ item.product.name }}</div>
+                                            <div>{{ item.get_total_price }} ₽</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="order-col">
+                                    <div><strong>Сумма заказа*</strong></div>
+                                    <div><strong class="order-total">{{ cart.total_price }} ₽</strong></div>
+                                </div>
+                                *Сумма без учета стоимости доставки
+                                <div class="payment-method">
+                                    <h3>Способ получения товара</h3>
+                                    {{ form.delivery }}
+                                    <h3>Способ оплаты</h3>
+                                    {{ form.pay_method }}
+                                    *Способ оплаты банковской картой временно недоступен
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="primary-btn order-submit">Оформить</button>
+                            </div>
+                        </div>
+                        <!-- /Order Details -->
+                    </form>
+                {% else %}
+                    <div class="section-title">
+                        <h3 class="title">В вашей корзине нет товаров</h3>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+{% endblock %}

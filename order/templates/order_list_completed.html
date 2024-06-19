@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="breadcrumb-header">История заказов</h3>
+                    <ul class="breadcrumb-tree">
+                        <li><a href="{% url 'orders_active' %}">Активные</a></li>
+                        <li class="active">Завершенные</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-7">
+                    <!-- Billing Details -->
+                    {% if orders %}
+                        <div class="billing-details">
+                            {% for order in orders %}
+                                <h3>Заказ №{{ order.pk }} от {{ order.date|date:"d.m.Y" }}</h3>
+                                <div class="form-group">
+                                    <div class="input-checkbox">
+                                        <input type="checkbox" id="{{ order }}">
+                                        <label for="{{ order }}">
+                                            <span></span>
+                                            Подробности
+                                        </label>
+                                        <div class="caption">
+                                            <div class="order-summary">
+                                                <div class="order-col">
+                                                    <div><strong>Товар</strong></div>
+                                                    <div><strong>Цена</strong></div>
+                                                </div>
+                                                <div class="order-products">
+                                                    {% for item in order.order_products.all %}
+                                                        <div class="order-col">
+                                                            <div>{{ item.quantity }}x {{ item.product.name }}</div>
+                                                            <div>{{ item.get_total_price }} ₽</div>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <div class="order-col">
+                                                        {% if order.delivery == '0' %}
+                                                            <div>Самовывоз</div>
+                                                            <div>0 ₽</div>
+                                                        {% else %}
+                                                            <div>Доставка</div>
+                                                            <div>500 ₽</div>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="order-col">
+                                                    <div><strong>Сумма заказа</strong></div>
+                                                    <div><strong class="order-total">{{ order.total_price }} ₽</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="billing-details">
+                            <h3>Нет завершенных заказов</h3>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

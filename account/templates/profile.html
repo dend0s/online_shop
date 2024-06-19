@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="breadcrumb-header">Мой Профиль</h3>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <form method="POST" action="{% url 'profile' %}">
+                    {% csrf_token %}
+
+                    <div class="col-md-7">
+                        <!-- Billing Details -->
+                        <div class="billing-details">
+
+                            <div class="section-title">
+                                <h3 class="title">Мои данные</h3>
+                            </div>
+                            <div class="form-group">
+                                <input class="input" type="text" name="first_name" placeholder="Имя"
+                                       value="{{ user.first_name }}">
+                            </div>
+                            <div class="form-group">
+                                <input class="input" type="text" name="last_name" placeholder="Фамилия"
+                                       value="{{ user.last_name }}">
+                            </div>
+                            <div class="form-group">
+                                <input class="input" type="email" name="email" placeholder="Email"
+                                       value="{{ user.email }}">
+                                {% for error in form.email.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                <input class="input" type="text" name="phone_number" placeholder="Номер телефона"
+                                       value="{{ user.phone_number }}">
+                                {% for error in form.phone_number.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="primary-btn order-submit">Изменить</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Order Details -->
+                <div class="col-md-5 order-details">
+
+                    <div class="section-title text-center">
+                        <h3 class="title">Дополнительно</h3>
+                    </div>
+                    <div class="section-title text-left">
+                        <h3 class="title"><a href="{% url 'orders_active' %}"><i
+                                class="fa fa-shopping-bag"></i> Заказы</a></h3>
+                    </div>
+                    <div class="section-title text-left">
+                        <h3 class="title"><a href="{% url 'cart' %}"><i
+                                class="fa fa-shopping-cart"></i> Корзина</a>
+                        </h3>
+                    </div>
+                    <div class="section-title text-left">
+                        <h3 class="title"><a href="{% url 'favorites' %}"><i
+                                class="fa fa-heart"></i> Избранное</a>
+                        </h3>
+                    </div>
+                    <div class="section-title text-left">
+                        <h3 class="title">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <a>
+                                    <button type="submit"><i class="fa fa-arrow-right"></i> Выход</button>
+                                </a>
+                            </form>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <!-- /Order Details -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+{% endblock %}
+
+

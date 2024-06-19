@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="breadcrumb-header">Избранное</h3>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    {% if favorites %}
+                        <div class="cart-list">
+                            {% for favorite in favorites %}
+                                <div class="product-widget">
+                                    <div class="product-img">
+                                        <img src="{{ favorite.product.image.url }}" alt="">
+                                    </div>
+                                    <div class="product-body">
+                                        <h3 class="product-name"><a
+                                                href="{% url 'product_detail' favorite.product.slug %}">{{ favorite.product.name }}</a>
+                                        </h3>
+                                        <h4 class="product-price">{{ favorite.product.price }} ₽</h4>
+                                    </div>
+                                    <a class="delete" href="{% url 'in_favorite' favorite.product.slug %}"><i
+                                            class="fa fa-close"></i></a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="billing-details">
+                            <h3>Список избранных товаров пуст</h3>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+{% endblock %}

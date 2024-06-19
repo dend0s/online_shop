@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block content %}
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb-tree">
+                        <li><a href="{% url 'index' %}">Каталог</a></li>
+                        <li>
+                            <a href="{% url 'product_in_category' product.category.slug %}">{{ product.category.name }}</a>
+                        </li>
+                        <li class="active">{{ product.name }}</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- Product main img -->
+                <div class="col-md-5">
+                    <div id="product-main-img">
+                        <div class="product-preview">
+                            <img src="{{ product.image.url }}">
+                        </div>
+
+                    </div>
+                </div>
+                <!-- /Product main img -->
+
+                <!-- Product thumb imgs -->
+                <div class="col-md-2 col-md-pull-5">
+
+                </div>
+                <!-- /Product thumb imgs -->
+
+                <!-- Product details -->
+                <div class="col-md-5">
+                    <div class="product-details">
+                        <h2 class="product-name">{{ product.name }}</h2>
+                        <div>
+                            <h3 class="product-price">{{ product.price|discount }} ₽
+                                <del class="product-old-price">{{ product.price }} ₽</del>
+                            </h3>
+                            {% if product.available %}
+                                <span class="product-available">В наличии</span>
+                            {% endif %}
+                        </div>
+                        <p>{{ product.description }}</p>
+                        {% if product.available %}
+                            <div class="add-to-cart">
+                                <div class="qty-label">
+                                    Кол-во
+                                    <form method="post" action="{% url 'add_to_cart' product.slug %}">
+                                        <div class="input-number">
+                                            {% csrf_token %}
+                                            <input type="number" name="quantity" value="1" min="1" max="10">
+                                            <span class="qty-up">+</span>
+                                            <span class="qty-down">-</span>
+                                        </div>
+                                        <button type="submit" class="add-to-cart-btn"><i
+                                                class="fa fa-shopping-cart"></i>
+                                            В корзину
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div>
+                                <h3 class="product-price">Товар временно отсутствует</h3>
+
+                            </div>
+                        {% endif %}
+
+                        <ul class="product-btns">
+                            {% if favorite %}
+                                <li><a href="{% url 'in_favorite' product.slug %}"><i class="fa fa-heart"></i>
+                                    Удалить из Избранного</a></li>
+                            {% else %}
+                                <li><a href="{% url 'in_favorite' product.slug %}"><i class="fa fa-heart-o"></i>
+                                    Добавить в Избранное</a></li>
+                            {% endif %}
+                        </ul>
+
+                        <ul class="product-links">
+                            <li>Категория: <a
+                                    href="{% url 'product_in_category' product.category.slug %}">{{ product.category.name }}</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- /Product details -->
+
+                <!-- Product tab -->
+                <div class="col-md-12">
+                    <div id="product-tab">
+                        <!-- product tab nav -->
+                        <ul class="tab-nav">
+                            <li class="active"><a data-toggle="tab" href="#tab1">Характеристики</a></li>
+                            {#                            <li><a data-toggle="tab" href="#tab2">Характеристики</a></li>#}
+                        </ul>
+                        <!-- /product tab nav -->
+
+                        <!-- product tab content -->
+                        <div class="tab-content">
+                            <!-- tab1  -->
+                            <div id="tab1" class="tab-pane fade in active">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="checkbox" class="read-more-checker" id="read-more-checker"/>
+                                        <div class="limiter">
+                                            <p>{{ product.characteristic|linebreaks }}</p>
+                                            <div class="bottom"></div>
+                                        </div>
+                                        <label for="read-more-checker" class="read-more-button"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /tab1  -->
+
+                        </div>
+                        <!-- /product tab content  -->
+                    </div>
+                </div>
+                <!-- /product tab -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    {% if related_products %}
+        <!-- Section -->
+        <div class="section">
+            <!-- container -->
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="section-title text-center">
+                            <h3 class="title">Похожие товары</h3>
+                        </div>
+                    </div>
+                    <!-- product -->
+                    {% for product in related_products %}
+                        <div class="col-md-3 col-xs-6">
+                            <a href="{% url 'product_detail' product.slug %}">
+                                <div class="product">
+                                    <div class="product-img">
+                                        <img src="{{ product.image.url }}">
+                                        <div class="product-label">
+                                            <span class="sale">-15%</span>
+                                            <span class="new">{{ product.time_create|new }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="product-body">
+                                        <p class="product-category">{{ product.category.name }}</p>
+                                        <h3 class="product-name"><a href="#">{{ product.name }}</a></h3>
+
+                                        <h4 class="product-price">{{ product.price|discount }} ₽
+                                            <del class="product-old-price">{{ product.price }} ₽</del>
+                                        </h4>
+
+                                        <div class="product-btns">
+                                            <button class="add-to-wishlist"><a
+                                                    href="{% url 'cart' %}"><i
+                                                    class="fa fa-heart-o"></i><span
+                                                    class="tooltipp">В Избранное</span></a></button>
+                                            <button class="add-to-wishlist"><a
+                                                    href="{% url 'product_detail' product.slug %}"><i
+                                                    class="fa fa-indent"></i><span
+                                                    class="tooltipp">Подробней</span></a></button>
+                                        </div>
+                                    </div>
+                                    <div class="add-to-cart">
+
+                                        <form method="post"
+                                              action="{% url 'add_to_cart' product.slug %}">
+                                            <div class="input-num">
+                                                {% csrf_token %}
+                                                <input type="number" name="quantity" value="1" min="1"
+                                                       max="10">
+                                            </div>
+                                            <button type="submit" class="add-to-cart-btn"><i
+                                                    class="fa fa-shopping-cart"></i>
+                                                В корзину
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    <!-- /product -->
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /container -->
+        </div>
+        <!-- /Section -->
+    {% endif %}
+    <br>
+
+{% endblock %}

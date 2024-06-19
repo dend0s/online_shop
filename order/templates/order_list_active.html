@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="breadcrumb-header">История заказов</h3>
+                <ul class="breadcrumb-tree">
+                    <li class="active">Активные</li>
+                    <li><a href="{% url 'orders_completed' %}">Завершенные</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-7">
+                <!-- Billing Details -->
+                {% if orders %}
+                <div class="billing-details">
+                    {% for order in orders %}
+                    {% if not order.status %}
+                    <h3>Заказ №{{ order.pk }} от {{ order.date|date:"d.m.Y" }}</h3>
+                    <div class="form-group">
+                        <div class="input-checkbox">
+                            <input type="checkbox" id="{{ order }}">
+                            <label for="{{ order }}">
+                                <span></span>
+                                Подробности
+                            </label>
+                            <div class="caption">
+                                {% if order.delivery == '0' %}
+                                <div><strong class="order-info">Заказ №{{ order.pk }} ожидает вас
+                                    для
+                                    получения по адресу г. Кострома, улица Магистральная, дом 20, ТРЦ РИО, 2
+                                    этаж.</strong></div>
+                                {% else %}
+                                <div><strong class="order-info">В течение часа с вами свяжется
+                                    менеджер
+                                    по телефону {{ order.phone_number }}
+                                    и уточнит детали доставки</strong></div>
+                                {% endif %}
+                                <div class="order-summary">
+                                    <div class="order-col">
+                                        <div><strong>Товар</strong></div>
+                                        <div><strong>Цена</strong></div>
+                                    </div>
+                                    <div class="order-products">
+                                        {% for item in order.order_products.all %}
+                                        <div class="order-col">
+                                            <div>{{ item.quantity }}x {{ item.product.name }}</div>
+                                            <div>{{ item.get_total_price }} ₽</div>
+                                        </div>
+                                        {% endfor %}
+                                        <div class="order-col">
+                                            {% if order.delivery == '0' %}
+                                            <div>Самовывоз</div>
+                                            <div>0 ₽</div>
+                                            {% else %}
+                                            <div>Доставка</div>
+                                            <div>500 ₽</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="order-col">
+                                        <div><strong>Сумма заказа</strong></div>
+                                        <div><strong class="order-total">{{ order.total_price }}
+                                            ₽</strong>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method">
+                                        <div><strong>Данные заказчика</strong></div>
+                                        <p>Email: {{ order.email }}</p>
+                                        <p>Телефон: {{ order.phone_number }}</p>
+                                        <p>Имя: {{ order.first_name }} {{ order.last_name }}</p>
+                                        <p>Адрес: {{ order.city }}, {{ order.address }}</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="{% url 'cancel_order' order.pk %}"
+                                           class="primary-btn order-submit">
+                                            Отменить заказ
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="billing-details">
+                    <h3>Нет активных заказов</h3>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

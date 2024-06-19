@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block content %}
+
+    <!-- HOT DEAL SECTION -->
+    <div id="hot-deal" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hot-deal">
+                        <ul class="hot-deal-countdown">
+                            <li>
+                                <div>
+                                    <h3>1</h3>
+                                    <span>июня</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <h3>ПО</h3>
+                                    <span></span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <h3>7</h3>
+                                    <span>июня</span>
+                                </div>
+                            </li>
+                        </ul>
+                        <h2 class="text-uppercase">Недельная распродажа</h2>
+                        <p>Скидка -15% на все товары</p>
+                        <a class="primary-btn cta-btn" href="{% url 'product_list' %}">К ПОКУПКАМ!</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /HOT DEAL SECTION -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                {% if new_items %}
+
+                    <!-- section title -->
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Новинки</h3>
+                            <div class="section-nav">
+                                <ul class="section-tab-nav tab-nav">
+                                    <li><a href="{% url 'product_list' %}">Все новинки</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /section title -->
+
+                    <!-- Products tab & slick -->
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="products-tabs">
+                                <!-- tab -->
+                                <div id="tab1" class="tab-pane active">
+                                    <div class="products-slick" data-nav="#slick-nav-1">
+                                        {% for new_item in new_items %}
+                                            <!-- product -->
+
+                                            <div class="product">
+                                                <a href="{% url 'product_detail' new_item.slug %}">
+                                                    <div class="product-img">
+                                                        <img src={{ new_item.image.url }}>
+                                                        <div class="product-label">
+                                                            <span class="sale">-15%</span>
+                                                            <span class="new">{{ new_item.time_create|new }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-body">
+                                                        <p class="product-category">{{ new_item.category.name }}</p>
+                                                        <h3 class="product-name"><a href="#">{{ new_item.name }}</a>
+                                                        </h3>
+                                                        <h4 class="product-price">{{ new_item.price|discount }} ₽
+                                                            <del class="product-old-price">{{ new_item.price }} ₽</del>
+                                                        </h4>
+                                                        <div class="product-btns">
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'in_favorite' new_item.slug %}"><i
+                                                                    class="fa fa-heart-o"></i><span
+                                                                    class="tooltipp">В Избранное</span></a></button>
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'product_detail' new_item.slug %}"><i
+                                                                    class="fa fa-indent"></i><span
+                                                                    class="tooltipp">Подробней</span></a></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-to-cart">
+
+                                                        <form method="post"
+                                                              action="{% url 'add_to_cart' new_item.slug %}">
+                                                            <div class="input-num">
+                                                                {% csrf_token %}
+                                                                <input type="number" name="quantity" value="1" min="1"
+                                                                       max="10">
+                                                            </div>
+                                                            <button type="submit" class="add-to-cart-btn"><i
+                                                                    class="fa fa-shopping-cart"></i>
+                                                                В корзину
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <!-- /product -->
+                                        {% endfor %}
+
+                                    </div>
+                                    <div id="slick-nav-1" class="products-slick-nav"></div>
+                                </div>
+                                <!-- /tab -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Products tab & slick -->
+                {% endif %}
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+
+                {% if smartphones %}
+                    <!-- section title -->
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Смартфоны Iphone</h3>
+                            <div class="section-nav">
+                                <ul class="section-tab-nav tab-nav">
+                                    <li><a href="{% url 'product_in_category' 'smartphones' %}">Все смартфоны</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /section title -->
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <!-- product -->
+                            {% for product in smartphones %}
+                                <div class="col-md-3 col-xs-6">
+                                    <a href="{% url 'product_detail' product.slug %}">
+                                        <div class="product">
+                                            <div class="product-img">
+                                                {% if product.image %}
+                                                    <img src="{{ product.image.url }}">
+                                                    <div class="product-label">
+                                                        <span class="sale">-15%</span>
+                                                        <span class="new">{{ product.time_create|new }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="product-body">
+                                                <p class="product-category">{{ product.category.name }}</p>
+                                                <h3 class="product-name"><a
+                                                        href="{% url 'product_detail' product.slug %}">{{ product.name }}</a>
+                                                </h3>
+                                                <h4 class="product-price">{{ product.price|discount }} ₽
+                                                    <del class="product-old-price">{{ product.price }} ₽</del>
+                                                </h4>
+
+                                                <div class="product-btns">
+                                                    <button class="add-to-wishlist"><a
+                                                            href="{% url 'in_favorite' product.slug %}"><i
+                                                            class="fa fa-heart-o"></i><span
+                                                            class="tooltipp">В Избранное</span></a></button>
+                                                    <button class="add-to-wishlist"><a
+                                                            href="{% url 'product_detail' product.slug %}"><i
+                                                            class="fa fa-indent"></i><span
+                                                            class="tooltipp">Подробней</span></a></button>
+                                                </div>
+                                            </div>
+                                            <div class="add-to-cart">
+
+                                                <form method="post" action="{% url 'add_to_cart' product.slug %}">
+                                                    <div class="input-num">
+                                                        {% csrf_token %}
+                                                        <input type="number" name="quantity" value="1" min="1" max="10">
+                                                    </div>
+                                                    <button type="submit" class="add-to-cart-btn"><i
+                                                            class="fa fa-shopping-cart"></i>
+                                                        В корзину
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                            <!-- /product -->
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Товары временно отсутствуют</h3>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                {% if watches %}
+                    <!-- section title -->
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Смарт-часы Apple Watch</h3>
+                            <div class="section-nav">
+                                <ul class="section-tab-nav tab-nav">
+                                    <li><a href="{% url 'product_in_category' 'watches' %}">Все умные часы</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /section title -->
+
+                    <!-- Products tab & slick -->
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="products-tabs">
+                                <!-- tab -->
+                                <div id="tab2" class="tab-pane fade in active">
+                                    <div class="products-slick" data-nav="#slick-nav-2">
+                                        {% for watch in watches %}
+                                            <!-- product -->
+                                            <div class="product">
+                                                <a href="{% url 'product_detail' watch.slug %}">
+                                                    <div class="product-img">
+                                                        <img src={{ watch.image.url }}>
+                                                        <div class="product-label">
+                                                            <span class="sale">-15%</span>
+                                                            <span class="new">{{ watch.time_create|new }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-body">
+                                                        <p class="product-category">{{ watch.category.name }}</p>
+                                                        <h3 class="product-name"><a
+                                                                href="{% url 'product_detail' watch.slug %}">{{ watch.name }}</a>
+                                                        </h3>
+                                                        <h4 class="product-price">{{ watch.price|discount }} ₽
+                                                            <del class="product-old-price">{{ watch.price }} ₽</del>
+                                                        </h4>
+                                                        <div class="product-btns">
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'in_favorite' watch.slug %}"><i
+                                                                    class="fa fa-heart-o"></i><span
+                                                                    class="tooltipp">В Избранное</span></a></button>
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'product_detail' watch.slug %}"><i
+                                                                    class="fa fa-indent"></i><span
+                                                                    class="tooltipp">Подробней</span></a></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-to-cart">
+
+                                                        <form method="post" action="{% url 'add_to_cart' watch.slug %}">
+                                                            <div class="input-num">
+                                                                {% csrf_token %}
+                                                                <input type="number" name="quantity" value="1" min="1"
+                                                                       max="10">
+                                                            </div>
+                                                            <button type="submit" class="add-to-cart-btn"><i
+                                                                    class="fa fa-shopping-cart"></i>
+                                                                В корзину
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <!-- /product -->
+                                        {% endfor %}
+
+                                    </div>
+                                    <div id="slick-nav-2" class="products-slick-nav"></div>
+                                </div>
+                                <!-- /tab -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- /Products tab & slick -->
+                {% endif %}
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                {% if pods %}
+
+                    <!-- section title -->
+                    <div class="col-md-12">
+                        <div class="section-title">
+                            <h3 class="title">Наушники AirPods</h3>
+                            <div class="section-nav">
+                                <ul class="section-tab-nav tab-nav">
+                                    <li><a data-toggle="tab" href="#tab1">Все наушники</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /section title -->
+
+                    <!-- Products tab & slick -->
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="products-tabs">
+                                <!-- tab -->
+                                <div id="tab3" class="tab-pane active">
+                                    <div class="products-slick" data-nav="#slick-nav-3">
+                                        {% for pod in pods %}
+                                            <!-- product -->
+                                            <div class="product">
+                                                <a href="{% url 'product_detail' pod.slug %}">
+                                                    <div class="product-img">
+                                                        <img src={{ pod.image.url }}>
+                                                        <div class="product-label">
+                                                            <span class="sale">-15%</span>
+                                                            <span class="new">{{ pod.time_create|new }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="product-body">
+                                                        <p class="product-category">{{ pod.category.name }}</p>
+                                                        <h3 class="product-name"><a
+                                                                href="{% url 'product_detail' pod.slug %}">{{ pod.name }}</a>
+                                                        </h3>
+                                                        <h4 class="product-price">{{ pod.price|discount }} ₽
+                                                            <del class="product-old-price">{{ pod.price|discount }} ₽
+                                                            </del>
+                                                        </h4>
+                                                        <div class="product-btns">
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'in_favorite' pod.slug %}"><i
+                                                                    class="fa fa-heart-o"></i><span
+                                                                    class="tooltipp">В Избранное</span></a></button>
+                                                            <button class="add-to-wishlist"><a
+                                                                    href="{% url 'product_detail' pod.slug %}"><i
+                                                                    class="fa fa-indent"></i><span
+                                                                    class="tooltipp">Подробней</span></a></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-to-cart">
+
+                                                        <form method="post" action="{% url 'add_to_cart' pod.slug %}">
+                                                            <div class="input-num">
+                                                                {% csrf_token %}
+                                                                <input type="number" name="quantity" value="1" min="1"
+                                                                       max="10">
+                                                            </div>
+                                                            <button type="submit" class="add-to-cart-btn"><i
+                                                                    class="fa fa-shopping-cart"></i>
+                                                                В корзину
+                                                            </button>
+                                                        </form>
+
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <!-- /product -->
+                                        {% endfor %}
+
+                                    </div>
+                                    <div id="slick-nav-3" class="products-slick-nav"></div>
+                                </div>
+                                <!-- /tab -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Products tab & slick -->
+                {% endif %}
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+    <!-- NEWSLETTER -->
+    <div id="newsletter" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="newsletter">
+                        <p>Подпишитесь на <strong>Новостную Рассылку</strong></p>
+                        <form>
+                            <input class="input" type="email" placeholder="Введите ваш Email">
+                            <button class="newsletter-btn"><i class="fa fa-envelope"></i> Подписаться</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /NEWSLETTER -->
+
+{% endblock %}

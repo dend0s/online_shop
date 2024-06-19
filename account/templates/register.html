@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block navigation %}{% endblock %}
+{% block content %}
+
+    <div class="container">
+        <div class="container-login text-center">
+            <div class="col-md-5">
+                <div class="product-d">
+                    <br>
+                    <h2 class="product-name">Регистрация</h2>
+                    <form method="post" action="{% url 'register' %}">
+                        {% csrf_token %}
+                        <div class="add-to-cart">
+                            <div class="qty-label">
+                                Имя
+                                <input class="input" type="text" name="first_name" required>
+                                {% for error in form.first_name.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                Фамилия
+                                <input class="input" type="text" name="last_name" required>
+                                {% for error in form.last_name.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                Email
+                                <input class="input" type="text" name="email" required>
+                                {% for error in form.email.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                Номер телефона
+                                <input class="input" type="text" name="phone_number" required>
+                                {% for error in form.phone_number.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                Пароль
+                                <input class="input" type="text" name="password1">
+                                {% for error in form.password1.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                                Подтверждение пароля
+                                <input class="input" type="text" name="password2">
+                                {% for error in form.password2.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <button class="add-to-cart-btn">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                    <br>
+                    <ul class="product-links">
+                        <li>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></li>
+                    </ul>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

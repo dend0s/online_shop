@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load shop_tags %}
+
+{% block content %}
+
+    <!-- BREADCRUMB -->
+    <div id="breadcrumb" class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb-tree">
+                        <li><a href="{% url 'product_list' %}">Каталог</a></li>
+                        <li class="active">{{ title }}</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /BREADCRUMB -->
+
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- STORE -->
+                <div id="store" class="col-md-12">
+                    <div class="section-title">
+                        <h3 class="title">{{ title }}</h3>
+                    </div>
+                    <!-- store top filter -->
+                    <div class="store-filter clearfix">
+                        <div class="store-sort">
+                            <form method="get" action="{% url 'product_list' %}">
+                                <label>
+                                    СОРТИРОВКА:
+                                    <select class="input-select" name="sort" onchange="this.form.submit();">
+                                        <option name='sort' value="default">По Умолчанию</option>
+                                        <option name='sort' value="price">По Возрастанию Цены</option>
+                                        <option name='sort' value="-price">По Убыванию Цены</option>
+                                        {#                                        <input type="submit">#}
+                                    </select>
+                                </label>
+                            </form>
+                        </div>
+                        <ul class="store-grid">
+                            <li class="active"><i class="fa fa-th"></i></li>
+                            <li><a href="#"><i class="fa fa-th-list"></i></a></li>
+                        </ul>
+                    </div>
+                    <!-- /store top filter -->
+
+                    <!-- store products -->
+                    <div class="row">
+                        {% if  products %}
+                            {% for product in products %}
+
+                                <!-- product -->
+                                <div class="col-md-3 col-xs-6">
+                                    <a href="{% url 'product_detail' product.slug %}">
+                                        <div class="product">
+                                            <div class="product-img">
+                                                <img src="{{ product.image.url }}" alt="">
+                                                <div class="product-label">
+                                                    <span class="new">{{ product.time_create|new }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="product-body">
+                                                <h3 class="product-name"><a href="#">{{ product.name }}</a></h3>
+                                                <h4 class="product-price">{{ product.price|discount }} ₽
+                                                    <del class="product-old-price">{{ product.price }} ₽</del>
+                                                </h4>
+                                                <div class="product-btns">
+                                                    <button class="add-to-wishlist"><a
+                                                            href="{% url 'in_favorite' product.slug %}"><i
+                                                            class="fa fa-heart-o"></i><span
+                                                            class="tooltipp">В Избранное</span></a></button>
+
+                                                    <button class="add-to-wishlist"><a
+                                                            href="{% url 'product_detail' product.slug %}"><i
+                                                            class="fa fa-indent"></i><span
+                                                            class="tooltipp">Подробней</span></a></button>
+                                                </div>
+                                            </div>
+                                            <div class="add-to-cart">
+
+                                                <form method="post" action="{% url 'add_to_cart' product.slug %}">
+                                                    <div class="input-num">
+                                                        {% csrf_token %}
+                                                        <input type="number" name="quantity" value="1" min="1" max="10">
+                                                    </div>
+                                                    <button type="submit" class="add-to-cart-btn"><i
+                                                            class="fa fa-shopping-cart"></i>
+                                                        В корзину
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- /product -->
+                                <div class="clearfix visible-sm visible-xs"></div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-md-12">
+                                <div class="section-title">
+                                    <h3 class="title">Товары временно отсутствуют</h3>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- store bottom filter -->
+                    <div class="store-filter clearfix">
+                        {% if page_obj.has_other_pages %}
+                            <ul class="store-pagination">
+                                {% if page_obj.has_previous %}
+                                    <li><a class="page-link" href="?page={{ page_obj.previous_page_number }}"
+                                           tabindex="-1"><i class="fa fa-angle-left"></i></a></li>
+                                {% else %}
+                                    <li>
+                                        <a class="page-link disabled" href="#" tabindex="-1"><i
+                                                class="fa fa-angle-left"></i></a>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in page_obj.paginator.page_range %}
+                                    {% if i == page_obj.number %}
+                                        <li class="active"><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if page_obj.has_next %}
+                                    <li><a href="?page={{ page_obj.next_page_number }}"><i
+                                            class="fa fa-angle-right"></i></a></li>
+                                {% else %}
+                                    <li>
+                                        <a class="page-link" href="#"><i class="fa fa-angle-right"></i></a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <!-- /store bottom filter -->
+                </div>
+                <!-- /STORE -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+{% endblock %}
